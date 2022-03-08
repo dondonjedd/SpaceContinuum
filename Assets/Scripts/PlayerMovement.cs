@@ -8,11 +8,17 @@ using UnityEngine.EventSystems;
 public class PlayerMovement : MonoBehaviour
 {
     List<Touch> touches;
+    [SerializeField] private float forceMagnitude;
+    [SerializeField] private float maxVelocity;
+
     private Camera mainCamera;
+    private Rigidbody rb;
+    private Vector3 movementDirection;
     // Start is called before the first frame update
     void Start()
     {
         mainCamera = Camera.main;
+        rb = GetComponent<Rigidbody>();
         foreach (Touch touch in Input.touches) {
             touches.Add(touch);
         }
@@ -23,16 +29,30 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
         if (Touchscreen.current.primaryTouch.press.isPressed)
         {
             Vector2 touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
-            Debug.Log(touchPosition);
-            
+
             Vector3 worldPosition = mainCamera.ScreenToWorldPoint(touchPosition);
 
-            Debug.Log(worldPosition);
+            movementDirection = transform.position - worldPosition;
+            movementDirection.z = 0f;
+            movementDirection.Normalize();
+        }
+        else { 
+            movementDirection = Vector3.zero;
         }
         
+    }
+
+    private void FixedUpdate()
+    {
+        if (movementDirection == Vector3.zero) { return; }
+        else {
+            rb.AddForce(movementDirection*forceMagnitude*Time.deltaTime, ForceMode.Force);
+            rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxVelocity);
+            
+        }
     }
 }
