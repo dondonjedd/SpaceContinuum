@@ -29,20 +29,8 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        if (Touchscreen.current.primaryTouch.press.isPressed)
-        {
-            Vector2 touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
-
-            Vector3 worldPosition = mainCamera.ScreenToWorldPoint(touchPosition);
-
-            movementDirection = transform.position - worldPosition;
-            movementDirection.z = 0f;
-            movementDirection.Normalize();
-        }
-        else { 
-            movementDirection = Vector3.zero;
-        }
+        inputHandler();
+        keepPlayerInScreen();
         
     }
 
@@ -54,5 +42,52 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxVelocity);
             
         }
+    }
+
+
+    private void inputHandler() {
+        if (Touchscreen.current.primaryTouch.press.isPressed)
+        {
+            Vector2 touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
+
+            Vector3 worldPosition = mainCamera.ScreenToWorldPoint(touchPosition);
+
+            movementDirection = transform.position - worldPosition;
+            movementDirection.z = 0f;
+            movementDirection.Normalize();
+        }
+        else
+        {
+            movementDirection = Vector3.zero;
+        }
+    }
+
+    private void keepPlayerInScreen() {
+
+        Vector3 viewPortPosition = mainCamera.WorldToViewportPoint(transform.position);
+
+        if (viewPortPosition.x > 1) {
+            viewPortPosition.x = 0;
+            transform.position = mainCamera.ViewportToWorldPoint(viewPortPosition);
+        }
+        else if (viewPortPosition.x < 0)
+        {
+            viewPortPosition.x = 1;
+            transform.position = mainCamera.ViewportToWorldPoint(viewPortPosition);
+        }
+
+        if (viewPortPosition.y > 1)
+        {
+            viewPortPosition.y = 0;
+            transform.position = mainCamera.ViewportToWorldPoint(viewPortPosition);
+        }
+        else if (viewPortPosition.y < 0)
+        {
+            viewPortPosition.y = 1;
+            transform.position = mainCamera.ViewportToWorldPoint(viewPortPosition);
+        }
+
+        
+
     }
 }
