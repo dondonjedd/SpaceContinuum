@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     List<Touch> touches;
     [SerializeField] private float forceMagnitude;
     [SerializeField] private float maxVelocity;
+    [SerializeField] private float rotationSpeed;
 
     private Camera mainCamera;
     private Rigidbody rb;
@@ -31,17 +32,18 @@ public class PlayerMovement : MonoBehaviour
     {
         inputHandler();
         keepPlayerInScreen();
+        RotatePlayer();
         
     }
 
     private void FixedUpdate()
     {
-        if (movementDirection == Vector3.zero) { return; }
-        else {
-            rb.AddForce(movementDirection*forceMagnitude*Time.deltaTime, ForceMode.Force);
-            rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxVelocity);
+        if (movementDirection == Vector3.zero) { return; } //can't put else because there will be a bug for where player moves by itself
+        
+        rb.AddForce(movementDirection*forceMagnitude*Time.deltaTime, ForceMode.Force);
+        rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxVelocity);
             
-        }
+      
     }
 
 
@@ -86,8 +88,12 @@ public class PlayerMovement : MonoBehaviour
             viewPortPosition.y = 1;
             transform.position = mainCamera.ViewportToWorldPoint(viewPortPosition);
         }
+    }
 
-        
-
+    private void RotatePlayer()
+    {
+        if (rb.velocity == Vector3.zero){return;}
+        Quaternion targetRotation =  Quaternion.LookRotation(rb.velocity,Vector3.back);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 }
