@@ -5023,7 +5023,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forceMagnitude: 850
-  maxVelocity: 6
+  maxVelocity: 5
   rotationSpeed: 10
 --- !u!54 &1393051288
 Rigidbody:

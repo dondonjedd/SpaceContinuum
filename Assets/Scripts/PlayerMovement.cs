@@ -20,11 +20,6 @@ public class PlayerMovement : MonoBehaviour
     {
         mainCamera = Camera.main;
         rb = GetComponent<Rigidbody>();
-        foreach (Touch touch in Input.touches) {
-            touches.Add(touch);
-        }
-
-
     }
 
     // Update is called once per frame
@@ -54,7 +49,7 @@ public class PlayerMovement : MonoBehaviour
 
             Vector3 worldPosition = mainCamera.ScreenToWorldPoint(touchPosition);
 
-            movementDirection = transform.position - worldPosition;
+            movementDirection = -(transform.position - worldPosition);
             movementDirection.z = 0f;
             movementDirection.Normalize();
         }
