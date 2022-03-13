@@ -12,6 +12,17 @@ public class Asteroid : MonoBehaviour
         {
             playerHealth.Crash();
         }
+
+        if (other.gameObject.CompareTag("Asteroid")) { 
+            //TODO
+        }
+
         return;
+    }
+
+
+    private void OnBecameInvisible()
+    {
+        Destroy(gameObject);
     }
 }
