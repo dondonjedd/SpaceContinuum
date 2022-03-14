@@ -10,10 +10,4 @@ public class PlayerHealth : MonoBehaviour
         gameOver.endGame();
         
     }
-
-    public void restart()
-    {
-        gameObject.SetActive(true);
-
-    }
 }
