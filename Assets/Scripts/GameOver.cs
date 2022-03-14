@@ -12,7 +12,7 @@ public class GameOver : MonoBehaviour
     [SerializeField] private ScoreSystem scoreSystem;
     [SerializeField] private TMP_Text CurrentScoreText;
     [SerializeField] private TMP_Text HighScoreText;
-    public String HighScoreKey =  "HighScoreKey";
+    public const String HighScoreKey =  "HighScoreKey";
 
 
 
