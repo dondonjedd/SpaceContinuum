@@ -11,10 +11,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float forceMagnitude;
     [SerializeField] private float maxVelocity;
     [SerializeField] private float rotationSpeed;
+    [SerializeField] private Joystick joystick;
 
     private Camera mainCamera;
     private Rigidbody rb;
     private Vector3 movementDirection;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -33,30 +35,41 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        movementDirection = Vector3.up * joystick.Vertical + Vector3.right * joystick.Horizontal;
+        movementDirection.z = 0;
         if (movementDirection == Vector3.zero) { return; } //can't put else because there will be a bug for where player moves by itself
-        
-        rb.AddForce(movementDirection*forceMagnitude*Time.deltaTime, ForceMode.Force);
+
+        rb.AddForce(movementDirection * forceMagnitude * Time.fixedDeltaTime, ForceMode.Force);
         rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxVelocity);
-            
-      
+
+
+        //rb.AddForce(movementDirection*forceMagnitude*Time.deltaTime, ForceMode.Force);
+        //rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxVelocity);
+
+
     }
 
 
     private void inputHandler() {
-        if (Touchscreen.current.primaryTouch.press.isPressed)
-        {
-            Vector2 touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
+        
 
-            Vector3 worldPosition = mainCamera.ScreenToWorldPoint(touchPosition);
+        //if (Touchscreen.current.primaryTouch.press.isPressed)
+        //{
+        //    movementDirection = Vector3.forward * joystick.Vertical + Vector3.right * joystick.Horizontal;
+        //    //Vector2 touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
 
-            movementDirection = -(transform.position - worldPosition);
-            movementDirection.z = 0f;
-            movementDirection.Normalize();
-        }
-        else
-        {
-            movementDirection = Vector3.zero;
-        }
+        //    //Vector3 worldPosition = mainCamera.ScreenToWorldPoint(touchPosition);
+
+        //    //movementDirection = transform.position - worldPosition;
+        //    //movementdirection.z = 0f;
+        //    //movementdirection.normalize();
+        //    movementDirection.z = 0f;
+
+        //}
+        //else
+        //{
+        //    movementDirection = Vector3.zero;
+        //}
     }
 
     private void keepPlayerInScreen() {

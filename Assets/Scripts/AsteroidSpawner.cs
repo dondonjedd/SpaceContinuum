@@ -16,6 +16,7 @@ public class AsteroidSpawner : MonoBehaviour
     private void Start()
     {
         mainCamera = Camera.main;
+        InvokeRepeating("IncreaseAsteroidOvertime", 0f, 20);
     }
 
     // Update is called once per frame
@@ -28,6 +29,18 @@ public class AsteroidSpawner : MonoBehaviour
             timer += asteroidSpawnDuration;
         }
     }
+
+    private void IncreaseAsteroidOvertime() {
+        if (asteroidSpawnDuration > 0.25)
+        {
+            asteroidSpawnDuration = asteroidSpawnDuration - 0.1f;
+        }
+        else
+        {
+            CancelInvoke("IncreaseAsteroidOvertime");
+        }
+    }
+
     private void spawnAsteroid() {
 
         int side = Random.Range(0, 4);
